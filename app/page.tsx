@@ -8,7 +8,7 @@ const openSans = Open_Sans({ subsets: ["latin"] });
 
 interface FormData {
   reportType: string;
-  clienName: string;
+  client: string;
   reportFile: any;
 }
 
@@ -20,7 +20,7 @@ interface DatePickerData {
 const Home = () => {
   const [form, setForm] = useState<FormData>({
     reportType: "",
-    clienName: "",
+    client: "",
     reportFile: null,
   });
   const [date, setDate] = useState<DatePickerData>({
@@ -55,20 +55,19 @@ const Home = () => {
     e.preventDefault();
     // if (date.endDate.length === 0 || date.startDate.length === 0)
     //   return alert("enter date");
-    // if (form.clienName.length === 0 || form.reportType.length === 0)
+    // if (form.client.length === 0 || form.reportType.length === 0)
     //   return alert("Select Data");
     try {
       const formData = new FormData();
-      formData.append("file", form.reportFile);
-      formData.append("clienName", form.clienName);
-      formData.append("reportType", form.reportType);
+      formData.append("csv_file", form.reportFile);
+      formData.append("client", form.client);
+      formData.append("report_type", form.reportType);
       formData.append("date", date.startDate);
       console.log(formData);
       const res = await fetch("http://127.0.0.1:5000/api/generate_report", {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-        mode: "cors",
         method: "POST",
         body: formData,
       });
@@ -96,7 +95,7 @@ const Home = () => {
         <div className="relative mx-auto my-10 h-full w-[60%]  py-10">
           <h1 className="mb-20 text-5xl font-bold uppercase ">Report System</h1>
           {/* Two columns */}
-          <form onSubmit={submitHandler}>
+          <form onSubmit={submitHandler} encType="multipart/form-data">
             <div className="relative flex justify-between space-x-6">
               <div
                 className={`${openSans.className}relative h-full w-full  space-y-10`}
@@ -163,7 +162,7 @@ const Home = () => {
                     <select
                       onChange={changeHandler}
                       id="countries"
-                      name="clienName"
+                      name="client"
                       className="placehold0 block w-full rounded-lg border border-gray-300 bg-gray-50 p-4  focus:border-blue-500 focus:ring-1 focus:ring-blue-500 "
                     >
                       <option defaultValue={""}>Choose a client</option>
@@ -209,7 +208,7 @@ const Home = () => {
                   <input
                     value={`SUBMIT`}
                     type="submit"
-                    className="w-full bg-[#262837]  py-3 font-bold text-white"
+                    className="w-full bg-[#262837] py-3 font-bold text-white hover:cursor-pointer"
                   />
                 </div>
               </div>
