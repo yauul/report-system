@@ -57,13 +57,13 @@ const Home = () => {
     //   return alert("enter date");
     // if (form.client.length === 0 || form.reportType.length === 0)
     //   return alert("Select Data");
+    const formData = new FormData();
+    formData.append("csv_file", form.reportFile);
+    formData.append("client", form.client);
+    formData.append("report_type", form.reportType);
+    formData.append("date", date.startDate);
+    console.log(formData);
     try {
-      const formData = new FormData();
-      formData.append("csv_file", form.reportFile);
-      formData.append("client", form.client);
-      formData.append("report_type", form.reportType);
-      formData.append("date", date.startDate);
-      console.log(formData);
       const res = await fetch("http://127.0.0.1:5000/api/generate_report", {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -71,15 +71,9 @@ const Home = () => {
         method: "POST",
         body: formData,
       });
-
-      if (!res.ok) {
-        console.error("something went wrong, check your console.");
-        return;
-      }
-
-      const data: { fileUrl: string } = await res.json();
+      console.log(res);
     } catch (error) {
-      console.error("something went wrong, check your console.");
+      console.log(error);
     }
   };
 
